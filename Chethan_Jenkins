@@ -1,0 +1,36 @@
+pipeline {
+    agent { label "slave1"}
+    
+    triggers { 
+        pollSCM('* * * * *')
+    }    
+
+
+    stages {
+        stage('stage1') {
+            steps {
+                echo 'clone the project'
+                git branch: 'main', url: 'https://github.com/ChethanRamesh1997/Construction.git'
+            }
+        }
+            stage('stage2') {
+            steps {
+                echo 'verify the project'
+                sh 'pwd'
+                sh 'ls'
+            }
+        }
+        stage('stage3') {
+            steps {
+                echo 'copy the file'
+                sh 'scp -i /home/ec2-user/key.pem -r /var/jenkins/workspace/html_construction_project/* ec2-user@54.251.139.18:/var/www/html'
+            }
+        }
+         stage('stage4') {
+            steps {
+                echo 'complete'
+            }
+        }
+    }     
+    
+}
